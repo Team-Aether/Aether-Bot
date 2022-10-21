@@ -15,10 +15,14 @@ int my_delay = 10;  // delay time // '-' optimum motor speed
 #define enb 11 // right motor 
 
 // speed constants
-int base_speed = 45; // speed when the robot is moving forward
-int right_motor_speed = 38; // sped of the motors when they are running on a straight line 
-int left_motor_speed = 45; // left motor runs at a slightly higher speed compared to the right motor
-int turn_speed = 25;
+int spd = 60;
+int right_spd = 75;
+
+int base_speed = spd; // speed when the robot is moving forward
+int right_motor_speed = spd; // speed of the motors when they are running on a straight line 
+int left_motor_speed = spd; // left motor runs at a slightly higher speed compared to the right motor
+int turn_speed = 65;
+int setpoint = spd;  // optimum motor speed for PID calculation
 
 // motor movement function prototypes
 void forward(int, int);
@@ -36,11 +40,9 @@ double last_error;
 double input, output, set_point;
 double cumulative_error, rate_error;
 
-int setpoint = 45;  // optimum motor speed
-
-float kp = 300;  // proportional term
-float kd = 400;  // derivative term
-float ki = 0.00005;
+float kp = 1000;  // proportional term
+float kd = 700;  // derivative term
+float ki = 0;
 
 // infrared sensors pins for line follower
 #define RIGHT_IR_IN A1
@@ -147,28 +149,28 @@ void setup() {
   pinMode(enb, OUTPUT);
 
   // initial state
-  current_state = LINE;
-
-
+//  current_state = LINE;
+//forward(spd, left_spd);
 }
 
 void loop() {
   
-  if(current_state == LINE){
-    // run line follow
-    follow_line();
-    Serial.println("FOLLOWING LINE");
-  } else if(current_state == STOP_GO){
-    // run stop and go code
-    Serial.println("STOP AND GO");
-    // stop_and_go();
-    
-  }else if(current_state == MAZE){
-    // run code for solving the maze
-    Serial.println("SOLVING MAZE");
-    // solve_maze();
-  }
- 
+//  if(current_state == LINE){
+//    // run line follow
+//    follow_line();
+//    Serial.println("FOLLOWING LINE");
+//  } else if(current_state == STOP_GO){
+//    // run stop and go code
+//    Serial.println("STOP AND GO");
+//    // stop_and_go();
+//    
+//  }else if(current_state == MAZE){
+//    // run code for solving the maze
+//    Serial.println("SOLVING MAZE");
+//    // solve_maze();
+//  }
+
+  follow_line(); 
 }
 
 // function to call for line following state
@@ -178,6 +180,9 @@ void follow_line(){
 
   right_motor_speed = right_motor_speed - PID(right_motor_speed); // apply correction to the right motor
   left_motor_speed = left_motor_speed + PID(left_motor_speed);  // apply correction to the left motor
+
+  Serial.println(right_motor_speed);
+  Serial.println(left_motor_speed);
    
   if((right_val == 1) && (left_val == 0)){
     // steer to the right
@@ -199,5 +204,3 @@ void follow_line(){
     forward(right_motor_speed, left_motor_speed);
   } 
 }
-
-
