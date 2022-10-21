@@ -171,7 +171,7 @@ void loop() {
  
 }
 
-// function to call for line follwoing state
+// function to call for line following state
 void follow_line(){
   int right_val = digitalRead(RIGHT_IR_IN);
   int left_val = digitalRead(LEFT_IR_IN);
@@ -197,9 +197,6 @@ void follow_line(){
   else if((right_val == 0) && (left_val == 0)){
     // always move forward
     forward(right_motor_speed, left_motor_speed);
- 
-
-    //return 1; // means we are done with the line following part    
   } 
 }
 
